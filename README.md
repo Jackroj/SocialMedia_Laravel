@@ -15,4 +15,9 @@
 ### This below comment will re run the last two migration file
 ```
 php artisan migrate:refresh --step-2
+
 ```
+
+### Route resource 
+
+https://laravel.com/docs/10.x/controllers

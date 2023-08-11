@@ -20,5 +20,3 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-Route::get('/profile', [UserController::class, 'userprofile'])->middleware('auth');

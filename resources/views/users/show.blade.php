@@ -1,19 +1,22 @@
 @extends('layout.layout')
 
 @section('title')
-    Dashboard
+    Profile
 @endsection
 
 @section('content')
 <div class="container py-4">
 <div class="row">
     <div class="col-3">
-     @include('shared.left-sidebar')
+        @include('shared.left-sidebar')
     </div>
     <div class="col-6">
        @include('shared.success-message')
        @include('shared.error-message')
-        @include('shared.submit-idea')
+        <hr>
+          <div class="mt-3">
+               @include('shared.user-card')
+            </div>
         <hr>
         @forelse ($ideas->withQueryString() as $idea)
         <div class="mt-3">

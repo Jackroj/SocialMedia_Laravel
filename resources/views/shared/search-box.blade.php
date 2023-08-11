@@ -4,7 +4,7 @@
             </div>
             <form action="{{ route('dashboard') }}" method="GET">
                 <div class="card-body">
-                    <input name="search" placeholder="...
+                    <input value='{{ request('search', '') }} 'name="search" placeholder="...
                     " class="form-control w-100" type="text"
                         id="search">
                     <button type="submit" class="btn btn-dark mt-2"> Search</button>

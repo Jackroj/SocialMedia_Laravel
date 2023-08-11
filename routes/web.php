@@ -23,7 +23,7 @@ Route::group([ 'prefix'=> '/idea', 'as' => 'idea.'],
 function(){
             // Route::post('/', [IdeaController::class, 'store'])->name('store');
 
-            Route::get('/{idea}', [IdeaController::class, 'show'])->name('show');
+            // Route::get('/{idea}', [IdeaController::class, 'show'])->name('show');
 
             
             Route::group([ 'middleware' => ['auth']], function () {
@@ -34,7 +34,7 @@ function(){
     
                 // Route::put('/{idea}', [IdeaController::class, 'update'])->name('update');
     
-                Route::post('/{idea}/comments', [CommentController::class, 'store'])->name('comments.store');  
+                // Route::post('/{idea}/comments', [CommentController::class, 'store'])->name('comments.store');  
             });
 
         });
@@ -42,3 +42,9 @@ function(){
 Route::Resource('idea', IdeaController::class)->except(['index', 'create', 'show'])->middleware('auth');
 
 Route::Resource('idea', IdeaController::class)->only(['show']);
+
+Route::Resource('idea.comments', CommentController::class)->only(['store'])->middleware('auth');
+
+Route::Resource('users', UserController::class)->only(['show', 'edit', 'update'])->middleware('auth');
+
+Route::get('profile', [UserController::class, 'profile'])->middleware('auth')->name('profile');

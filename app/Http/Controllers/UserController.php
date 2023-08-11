@@ -4,46 +4,67 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    //
-    public function adduser(Request $request){
-        $request->validate([
-            'name' => 'required',
-            'email'=>'required|string|email|max:255',
-            'password' => 'required'
-        ]);
-        // $params['password']= bycrypt($params['password']);
-        $Users = new User;
-        $Users->name= $request->name;
-        $Users->email= $request->email;
-        $Users->password= $request->password;
-        $Users->save();
-        return  redirect('/dashboard');
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $user)
+    {
+        $ideas = $user->Ideas()->paginate(5);
+        return view('users.show', compact('user', 'ideas'));
     }
 
-    public function userprofile(){
-        $user = User::where('email', 'devapraveen10@gmail.com')->first();
-        return view('profile', ['user' => $user]);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(User $user)
+    {
+        //
+        $editing = true;
+        $ideas = $user->Ideas()->paginate(5);
+        return view('users.edit', compact('user', 'editing', 'ideas'));
     }
 
-    public function userupdate(Request $request){
-        $request->validate([
-            'name' => 'required',
-            'email'=>'required|string|email|max:255'
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(User $user)
+    {
+        $validated = request()->validate([
+            'name' => 'required|min:3|max:40',
+            'bio' => 'nullable|min:1|max:255',
+            'image' => 'image'
         ]);
-        User::where('email', $request['email'])->update(['name' => $request['name']]);
-        return  redirect('/profile');
+
+        if (request()->has('image')) {
+            $imagePath = request()->file('image')->store('profile', 'public');
+            $validated['image'] = $imagePath;
+
+            Storage::disk('public')->delete($user->image ?? '');
+        }
+
+        $user->update($validated);
+
+        return redirect()->route('profile');
+
     }
 
-    public function signin(Request $request){
-        $request->validate([
-            'email'=>'required',
-            'password' => 'required'
-        ]);
-        $logUser = User::where('email', $request['email'])->where('password', $request['password'])->first();
-        // return view('components.dashboard', ['loggedinuser'=> $logUser]);
-        return  redirect('/dashboard');
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        //
+    }
+
+    public function profile()
+    {
+        //
+        return $this->show(auth()->user());
     }
 }
